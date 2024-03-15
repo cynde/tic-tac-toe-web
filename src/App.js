@@ -2,9 +2,11 @@ import { useState } from 'react';
 import './App.css';
 
 function App() {
+  const initialPlayer = 'o';
   const initialBoard = ['+', '+', '+', '+', '+', '+', '+', '+', '+'];
   const initialIsDisabled = [false, false, false, false, false, false, false, false, false];
 
+  const [player, setPlayer] = useState(initialPlayer);
   const [board, setBoard] = useState(initialBoard);
   const [isDisabled, setIsDisabled] = useState(initialIsDisabled);
 
@@ -13,17 +15,42 @@ function App() {
   const [oWinCount, setOWinCount] = useState(0);
 
   const handleRestart = () => {
+    setPlayer(initialPlayer);
     setBoard(initialBoard);
     setIsDisabled(initialIsDisabled);
+    setCount(0);
   };
 
-  const handleCellClick = () => {
+  const handleCellClick = (selectedIndex) => {
+    if (isDisabled[selectedIndex]) {
+      return alert('Already selected');
+    }
 
+    const newBoard = board.map((cell, index) => {
+      if (index === selectedIndex) {
+        return player;
+      }
+      return cell;
+    });
+    setBoard(newBoard);
+
+    const newIsDisabled = isDisabled.map((cellIsDisabled, index) => {
+      if (index === selectedIndex) {
+        return true;
+      }
+      return cellIsDisabled;
+    })
+    setIsDisabled(newIsDisabled);
+
+    const newPlayer = player === 'o' ? 'x' : 'o';
+    setPlayer(newPlayer);
+
+    setCount(count + 1);
   };
 
   const getCellClassName = (cell, index) => {
     return (
-      `btn span1${isDisabled[index] ? ' disable' : ''}${cell === 'o' ? ' btn-primary' : cell === 'x' ? ' btn-info' : ''}`
+      `btn span1${cell === 'o' ? ' btn-primary' : cell === 'x' ? ' btn-info' : ''}`
     );
   }
 
@@ -47,7 +74,7 @@ function App() {
 				</div>
 				<ul className='row' id='game'>
           {board.map((cell, index) => (
-            <li id={index} className={getCellClassName(cell, index)} onClick={handleCellClick}>{cell}</li>
+            <li id={index} className={getCellClassName(cell, index)} onClick={() => handleCellClick(index)}>{cell}</li>
           ))}
 				</ul>
 				<div className='clr'>&nbsp;</div>
