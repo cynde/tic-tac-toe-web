@@ -3,8 +3,16 @@ import './App.css';
 
 function App() {
   const initialPlayer = 'o';
-  const initialBoard = ['+', '+', '+', '+', '+', '+', '+', '+', '+'];
-  const initialIsDisabled = [false, false, false, false, false, false, false, false, false];
+  const initialBoard = [
+    ['+', '+', '+'],
+    ['+', '+', '+'],
+    ['+', '+', '+']
+  ];
+  const initialIsDisabled = [
+    [false, false, false],
+    [false, false, false],
+    [false, false, false]
+  ];
 
   const [player, setPlayer] = useState(initialPlayer);
   const [board, setBoard] = useState(initialBoard);
@@ -21,26 +29,16 @@ function App() {
     setCount(0);
   };
 
-  const handleCellClick = (selectedIndex) => {
-    if (isDisabled[selectedIndex]) {
+  const handleCellClick = (xIndex, yIndex) => {
+    if (isDisabled[xIndex][yIndex]) {
       return alert('Already selected');
     }
 
-    const newBoard = board.map((cell, index) => {
-      if (index === selectedIndex) {
-        return player;
-      }
-      return cell;
-    });
-    setBoard(newBoard);
+    board[xIndex][yIndex] = player;
+    setBoard(board);
 
-    const newIsDisabled = isDisabled.map((cellIsDisabled, index) => {
-      if (index === selectedIndex) {
-        return true;
-      }
-      return cellIsDisabled;
-    })
-    setIsDisabled(newIsDisabled);
+    isDisabled[xIndex][yIndex] = true;
+    setIsDisabled(isDisabled);
 
     const newPlayer = player === 'o' ? 'x' : 'o';
     setPlayer(newPlayer);
@@ -48,7 +46,7 @@ function App() {
     setCount(count + 1);
   };
 
-  const getCellClassName = (cell, index) => {
+  const getCellClassName = (cell) => {
     return (
       `btn span1${cell === 'o' ? ' btn-primary' : cell === 'x' ? ' btn-info' : ''}`
     );
@@ -73,8 +71,10 @@ function App() {
 					</div>
 				</div>
 				<ul className='row' id='game'>
-          {board.map((cell, index) => (
-            <li id={index} className={getCellClassName(cell, index)} onClick={() => handleCellClick(index)}>{cell}</li>
+          {board.map((row, xIndex) => (
+            row.map((cell, yIndex) => (
+              <li key={xIndex + yIndex} className={getCellClassName(cell)} onClick={() => handleCellClick(xIndex, yIndex)}>{cell}</li>
+            ))
           ))}
 				</ul>
 				<div className='clr'>&nbsp;</div>
