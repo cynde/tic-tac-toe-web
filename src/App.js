@@ -2,8 +2,10 @@ import { useState } from 'react';
 import './App.css';
 
 function App() {
+  const cellWidth = 85;
   const [input, setInput] = useState(null);
   const [boardSize, setBoardSize] = useState(null);
+  const [spanWidth, setSpanWidth] = useState(0);
 
   const initialPlayer = 'O';
   const [player, setPlayer] = useState(initialPlayer);
@@ -24,7 +26,6 @@ function App() {
     if (parseInt(input) < 3) {
       return alert('Invalid board size. Size must be more than 2');
     }
-    setBoardSize(input);
 
     let initialBoardArray = [];
     let initialIsDisabledArray = [];
@@ -37,10 +38,12 @@ function App() {
       };
     };
 
-    setInitialBoard(initialBoardArray);
+    setBoardSize(input);
+    setInitialBoard(JSON.parse(JSON.stringify(initialBoardArray)));
     setBoard(initialBoardArray);
-    setInitialIsDisabled(initialIsDisabledArray);
+    setInitialIsDisabled(JSON.parse(JSON.stringify(initialIsDisabledArray)));
     setIsDisabled(initialIsDisabledArray);
+    setSpanWidth(input * cellWidth);
   };
 
   const isWinByColumn = (selectedXIndex) => {
@@ -161,7 +164,7 @@ function App() {
 
   return (
     <div id='tic-tac-toe'>
-			<div className='span3 new_span'>
+			<div className='span3' style={{width: spanWidth}}>
 				<div className='row'>
 					<h1 className='span3'>Tic Tac Toe</h1>
           {boardSize ? (
