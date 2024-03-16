@@ -110,6 +110,10 @@ function App() {
     if (isCurrentPlayerWin(xIndex, yIndex)) {
       setWinner(player);
       alert(`${player.toUpperCase()} wins`);
+      if (player === 'O') {
+        return setOWinCount(oWinCount + 1);
+      }
+      return setXWinCount(xWinCount + 1);
     };
   };
 
