@@ -2,22 +2,16 @@ import { useState } from 'react';
 import './App.css';
 
 function App() {
-  const boardSize = 3;
-  const initialPlayer = 'O';
-  const initialBoard = [
-    ['+', '+', '+'],
-    ['+', '+', '+'],
-    ['+', '+', '+']
-  ];
-  const initialIsDisabled = [
-    [false, false, false],
-    [false, false, false],
-    [false, false, false]
-  ];
+  const [input, setInput] = useState(null);
+  const [boardSize, setBoardSize] = useState(null);
 
+  const initialPlayer = 'O';
   const [player, setPlayer] = useState(initialPlayer);
-  const [board, setBoard] = useState(initialBoard);
-  const [isDisabled, setIsDisabled] = useState(initialIsDisabled);
+  
+  const [initialBoard, setInitialBoard] = useState(null);
+  const [initialIsDisabled, setInitialIsDisabled] = useState(null);
+  const [board, setBoard] = useState(null);
+  const [isDisabled, setIsDisabled] = useState(null);
 
   const [moveCount, setMoveCount] = useState(0);
   const [xWinCount, setXWinCount] = useState(0);
@@ -25,6 +19,29 @@ function App() {
 
   const [winner, setWinner] = useState(null);
   const [isTie, setIsTie] = useState(false);
+
+  const handleEnterSize = () => {
+    if (parseInt(input) < 3) {
+      return alert('Invalid board size. Size must be more than 2');
+    }
+    setBoardSize(input);
+
+    let initialBoardArray = [];
+    let initialIsDisabledArray = [];
+    for (let xIndex = 0; xIndex < input; xIndex++) {
+      initialBoardArray[xIndex] = [];
+      initialIsDisabledArray[xIndex] = [];
+      for (let yIndex = 0; yIndex < input; yIndex++) {
+        initialBoardArray[xIndex][yIndex] = '+';
+        initialIsDisabledArray[xIndex][yIndex] = false;
+      };
+    };
+
+    setInitialBoard(initialBoardArray);
+    setBoard(initialBoardArray);
+    setInitialIsDisabled(initialIsDisabledArray);
+    setIsDisabled(initialIsDisabledArray);
+  };
 
   const isWinByColumn = (selectedXIndex) => {
     for (let yIndex = 0; yIndex < boardSize; yIndex++) {
@@ -147,30 +164,42 @@ function App() {
 			<div className='span3 new_span'>
 				<div className='row'>
 					<h1 className='span3'>Tic Tac Toe</h1>
-					<div className='span3'>
-						<div className='input-prepend input-append'>
-							<span className='add-on win_text'>O won</span>
-							<strong id='o_win' className='win_times add-on'>{oWinCount}</strong>
-							<span className='add-on'>time(s)</span>
-						</div>
-						<div className='input-prepend input-append'>
-							<span className='add-on win_text'>X won</span>
-							<strong id='x_win' className='win_times add-on'>{xWinCount}</strong>
-							<span className='add-on'>time(s)</span>
-						</div>
-					</div>
+          {boardSize ? (
+            <div className='span3'>
+              <div className='input-prepend input-append'>
+                <span className='add-on win_text'>O won</span>
+                <strong id='o_win' className='win_times add-on'>{oWinCount}</strong>
+                <span className='add-on'>time(s)</span>
+              </div>
+              <div className='input-prepend input-append'>
+                <span className='add-on win_text'>X won</span>
+                <strong id='x_win' className='win_times add-on'>{xWinCount}</strong>
+                <span className='add-on'>time(s)</span>
+              </div>
+            </div>
+          ) : (
+            <div className='span3'>
+              <label>Board size (3 for 3x3, 9 for 9x9, etc):</label>
+              <input type="number" id="size" name="size" onChange={({ target: { value }}) => setInput(value)} />
+              <a href='#' className='btn-success btn' onClick={handleEnterSize}>Enter</a>
+            </div>
+          )}
 				</div>
-				<ul className='row' id='game'>
-          {board.map((row, xIndex) => (
-            row.map((cell, yIndex) => (
-              <li key={xIndex + yIndex} className={getCellClassName(cell)} onClick={() => handleCellClick(xIndex, yIndex)}>{cell}</li>
-            ))
-          ))}
-				</ul>
-				<div className='clr'>&nbsp;</div>
-				<div className='row'>
-					<a href='#' id='reset' className='btn-success btn span3' onClick={handleRestart}>Restart</a>
-				</div>
+				{boardSize && (
+          <>
+            <ul className='row' id='game'>
+              {board.map((row, xIndex) => (
+                row.map((cell, yIndex) => (
+                  <li key={xIndex + yIndex} className={getCellClassName(cell)} onClick={() => handleCellClick(xIndex, yIndex)}>{cell}</li>
+                ))
+              ))}
+            </ul>
+            <div className='clr'>&nbsp;</div>
+            <div className='row'>
+              <a href='#' id='reset' className='btn-success btn span3' onClick={handleRestart}>Restart</a>
+            </div>
+          </>
+        )}
 			</div>
 		</div>
   );
