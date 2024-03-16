@@ -26,7 +26,7 @@ function App() {
   const [winner, setWinner] = useState(null);
   const [isTie, setIsTie] = useState(false);
 
-  const isCurrentPlayerWin = (selectedXIndex, selectedYIndex) => {
+  const isWinByColumn = (selectedXIndex) => {
     for (let yIndex = 0; yIndex < boardSize; yIndex++) {
       if (board[selectedXIndex][yIndex] !== player) {
         break;
@@ -35,7 +35,9 @@ function App() {
         return true;
       }
     }
+  };
 
+  const isWinByRow = (selectedYIndex) => {
     for (let xIndex = 0; xIndex < boardSize; xIndex++) {
       if (board[xIndex][selectedYIndex] !== player) {
         break;
@@ -44,7 +46,9 @@ function App() {
         return true;
       }
     }
+  };
 
+  const isWinByDiagonal = (selectedXIndex, selectedYIndex) => {
     if (selectedXIndex === selectedYIndex) {
       for (let index = 0; index < boardSize; index++) {
         if (board[index][index] !== player) {
@@ -55,7 +59,9 @@ function App() {
         }
       }
     }
+  };
 
+  const isWinByAntiDiagonal = (selectedXIndex, selectedYIndex) => {
     if (selectedXIndex + selectedYIndex === boardSize - 1) {
       for (let index = 0; index < boardSize; index++) {
         if (board[index][(boardSize - 1) - index] !== player) {
@@ -66,10 +72,23 @@ function App() {
         }
       }
     }
+  };
+
+  const isCurrentPlayerWin = (selectedXIndex, selectedYIndex) => {
+    if (
+      isWinByColumn(selectedXIndex) ||
+      isWinByRow(selectedYIndex) ||
+      isWinByDiagonal(selectedXIndex, selectedYIndex) ||
+      isWinByAntiDiagonal(selectedXIndex, selectedYIndex)
+    ) {
+      return true;
+    }
 
     if (moveCount === (Math.pow(boardSize, 2) - 1)) {
-      setIsTie(true);
+      return setIsTie(true);
     }
+
+    return false;
   };
 
   const handleRestart = () => {
@@ -102,9 +121,6 @@ function App() {
     isDisabled[xIndex][yIndex] = true;
     setIsDisabled(isDisabled);
 
-    const newPlayer = player === 'O' ? 'X' : 'O';
-    setPlayer(newPlayer);
-
     setMoveCount(moveCount + 1);
 
     if (isCurrentPlayerWin(xIndex, yIndex)) {
@@ -115,6 +131,9 @@ function App() {
       }
       return setXWinCount(xWinCount + 1);
     };
+
+    const newPlayer = player === 'O' ? 'X' : 'O';
+    setPlayer(newPlayer);
   };
 
   const getCellClassName = (cell) => {
