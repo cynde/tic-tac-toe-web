@@ -40,9 +40,9 @@ function App() {
 
     setBoardSize(input);
     setInitialBoard(JSON.parse(JSON.stringify(initialBoardArray)));
-    setBoard(initialBoardArray);
+    setBoard(JSON.parse(JSON.stringify(initialBoardArray)));
     setInitialIsDisabled(JSON.parse(JSON.stringify(initialIsDisabledArray)));
-    setIsDisabled(initialIsDisabledArray);
+    setIsDisabled(JSON.parse(JSON.stringify(initialIsDisabledArray)));
     setSpanWidth(input * cellWidth);
   };
 
@@ -113,8 +113,8 @@ function App() {
 
   const handleRestart = () => {
     setPlayer(initialPlayer);
-    setBoard(initialBoard);
-    setIsDisabled(initialIsDisabled);
+    setBoard(JSON.parse(JSON.stringify(initialBoard)));
+    setIsDisabled(JSON.parse(JSON.stringify(initialIsDisabled)));
     setMoveCount(0);
     setWinner(null);
     setIsTie(false);
