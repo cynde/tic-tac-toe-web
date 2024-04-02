@@ -164,46 +164,42 @@ function App() {
 
   return (
     <div id='tic-tac-toe'>
-			<div className='span3' style={{width: spanWidth}}>
-				<div className='row'>
-					<h1 className='span3'>Tic Tac Toe</h1>
-          {boardSize ? (
-            <div className='span3'>
-              <div className='input-prepend input-append'>
-                <span className='add-on win_text'>O won</span>
-                <strong id='o_win' className='win_times add-on'>{oWinCount}</strong>
-                <span className='add-on'>time(s)</span>
-              </div>
-              <div className='input-prepend input-append'>
-                <span className='add-on win_text'>X won</span>
-                <strong id='x_win' className='win_times add-on'>{xWinCount}</strong>
-                <span className='add-on'>time(s)</span>
-              </div>
-            </div>
-          ) : (
-            <div className='span3'>
-              <label>Board size (3 for 3x3, 9 for 9x9, etc):</label>
-              <input type="number" id="size" name="size" onChange={({ target: { value }}) => setInput(value)} />
-              <a href='#' className='btn-success btn' onClick={handleEnterSize}>Enter</a>
-            </div>
-          )}
-				</div>
-				{boardSize && (
-          <>
-            <ul className='row' id='game'>
-              {board.map((row, xIndex) => (
-                row.map((cell, yIndex) => (
-                  <li key={xIndex + yIndex} className={getCellClassName(cell)} onClick={() => handleCellClick(xIndex, yIndex)}>{cell}</li>
-                ))
-              ))}
-            </ul>
-            <div className='clr'>&nbsp;</div>
-            <div className='row'>
-              <a href='#' id='reset' className='btn-success btn span3' onClick={handleRestart}>Restart</a>
-            </div>
-          </>
-        )}
-			</div>
+      <h1>Tic Tac Toe</h1>
+      {boardSize ? (
+        <div className='counter'>
+          <div className='input-prepend input-append'>
+            <span className='add-on win_text'>O won</span>
+            <strong id='o_win' className='win_times add-on'>{oWinCount}</strong>
+            <span className='add-on'>time(s)</span>
+          </div>
+          <div className='input-prepend input-append'>
+            <span className='add-on win_text'>X won</span>
+            <strong id='x_win' className='win_times add-on'>{xWinCount}</strong>
+            <span className='add-on'>time(s)</span>
+          </div>
+        </div>
+      ) : (
+        <>
+          <label>Board size (3 for 3x3, 9 for 9x9, etc):</label>
+          <input type="number" id="size" name="size" onChange={({ target: { value }}) => setInput(value)} />
+          <a href='#' className='btn-success btn' onClick={handleEnterSize}>Enter</a>
+        </>
+      )}
+      {boardSize && (
+        <>
+          <ul id='game' style={{width: spanWidth}}>
+            {board.map((row, xIndex) => (
+              row.map((cell, yIndex) => (
+                <li key={xIndex + yIndex} className={getCellClassName(cell)} onClick={() => handleCellClick(xIndex, yIndex)}>{cell}</li>
+              ))
+            ))}
+          </ul>
+          <div className='clr'>&nbsp;</div>
+          <div>
+            <a href='#' id='reset' className='btn-success btn' onClick={handleRestart}>Restart</a>
+          </div>
+        </>
+      )}
 		</div>
   );
 }
